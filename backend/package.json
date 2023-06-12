@@ -11,6 +11,7 @@
         "coverage": "hh coverage --solcoverjs ./.solcover.js",
         "deploy:ballot": "hh --network mumbai run scripts/DeployTokenizedBallot.ts > deploy-ballot.log",
         "deploy:oracle": "hh --network mumbai run scripts/DeployOracle.ts > deploy-oracle.log",
+        "deploy:nft": "hh --network mumbai run scripts/DeployNFTToken.ts > deploy-nft.log",
         "run:vote": "hh --network mumbai run scripts/RunMyERC20Votes.ts > run-vote.log"
     },
     "devDependencies": {
