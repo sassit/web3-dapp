@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import Button from './ui/Button';
+import axios from 'axios';
 
 const thumbsContainer = {
   display: 'flex',
@@ -15,7 +17,7 @@ const thumb = {
   marginBottom: 8,
   marginRight: 8,
   width: 'auto',
-  height: 'auto',
+  height: '30vh',
   padding: 4,
   boxSizing: 'border-box',
 };
@@ -27,14 +29,58 @@ const thumbInner = {
 };
 
 const img = {
-  display: 'block',
   width: 'auto',
   height: '100%',
+  marginLeft: '0',
+  marginRight: '0',
 };
 
 export default function FileDrop(props) {
   const [files, setFiles] = useState([]);
-  const { getRootProps, getInputProps } = useDropzone({
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [confirmUpload, setConfirmUpload] = useState(false);
+  console.log(uploadStatus);
+  console.log(files);
+
+  useEffect(() => {
+    if (files.length !== 0) {
+      setConfirmUpload(true);
+    }
+  }, [files]);
+
+  const handleUpload = async () => {
+    setUploadStatus('Uploading...');
+
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append('image', file);
+      });
+      formData.append('nftName', 'Hello');
+      formData.append('nftDescription', 'Test');
+      formData.append('address', '0x63Ec8bcF66479CE5844Eb8cb5147C9D1CC448B95');
+
+      const response = await axios.post(
+        'http://localhost:3001/ipfs/upload',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      // Handle the response from the server as needed
+      console.log('Upload response:', response.data);
+
+      setUploadStatus('Upload successful!');
+    } catch (error) {
+      setUploadStatus('Upload failed!');
+      console.error('Error uploading files:', error);
+    }
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
       'image/*': [],
     },
@@ -70,24 +116,32 @@ export default function FileDrop(props) {
   }, []);
 
   return (
-    <section
-      className='container'
-      style={{
-        backgroundColor: 'grey',
-        width: '50vw',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '2rem',
-        borderRadius: '2rem',
-        border: '4px dotted black',
-      }}
-    >
-      <div {...getRootProps({ className: 'dropzone' })}>
-        <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
-      </div>
+    <>
+      <section
+        className='container'
+        style={{
+          backgroundColor: 'grey',
+          width: '50vw',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '2rem',
+          borderRadius: '2rem',
+          border: '4px dotted black',
+        }}
+      >
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+          {isDragActive ? (
+            <p>Drop the files here...</p>
+          ) : (
+            <p>Drag and drop files here, or click to select files</p>
+          )}
+        </div>
+      </section>
       <aside style={thumbsContainer}>{thumbs}</aside>
-    </section>
+      {uploadStatus}
+      {confirmUpload && <Button onClick={handleUpload}>Confirm Upload</Button>}
+    </>
   );
 }

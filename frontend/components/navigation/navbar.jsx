@@ -7,7 +7,7 @@ export default function Navbar() {
       <Link href='/'>
         <h1>NFTREASURE</h1>
       </Link>
-      <ConnectButton></ConnectButton>
+      <ConnectButton />
     </nav>
   );
 }
