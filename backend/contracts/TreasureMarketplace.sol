@@ -3,10 +3,9 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
-// import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "./TreasureCollection.sol";
 import "./TreasureVotes.sol";
-// IERC1155Receiver
+
 contract TreasureMarketplace is Ownable, ERC1155Holder {
     bytes public name;
     struct Treasure {
