@@ -23,8 +23,6 @@ contract TreasureMarketplace is Ownable, ERC1155Holder {
     mapping(uint256 => TreasureVote[]) public treasureVotes;
     mapping(address => uint256) public votingPowerSpent;
 
-    // uint256 public targetBlockNumber;
-
     constructor(
         bytes memory _name,
         address treasureCollectionContract,
